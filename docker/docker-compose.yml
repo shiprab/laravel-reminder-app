@@ -1,0 +1,64 @@
+version: "3.2"
+
+services:
+  reminderapi-nginx:
+    build: 
+      context: .
+      dockerfile: nginx-dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - reminderapinet
+    volumes:
+      - ../:/var/appcode/reminderapi
+    depends_on:
+      - reminderapi-phpfpm
+  
+  #socoemail-php:
+  #  build:
+  #    context: .
+  #    dockerfile: php-dockerfile
+  #  networks:
+  #    - socoemailnet
+  #  volumes:
+  #    - .:/var/appcode/socoemail
+  #  depends_on:
+  #    - socoemail-redis
+  
+  reminderapi-phpfpm:
+    build:
+      context: .
+      dockerfile: phpfpm-dockerfile
+    networks:
+      - reminderapinet
+    volumes:
+      - ../:/var/appcode/reminderapi
+    depends_on:
+      - reminderapi-redis
+      - reminderapi-db
+
+  reminderapi-redis:
+    build:
+      context: .
+      dockerfile: redis-dockerfile
+    networks:
+      - reminderapinet
+
+  reminderapi-db:
+    image: mysql:5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3368:3306"
+    volumes:
+      - "mysql-data:/var/lib/mysql"
+    networks:
+    - reminderapinet
+
+networks:
+  reminderapinet:
+    driver: bridge      
+
+volumes:
+    mysql-data:

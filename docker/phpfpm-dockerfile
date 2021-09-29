@@ -1,0 +1,18 @@
+FROM studiographene/php-fpm7-nginx:7.4.16-fpm-alpine
+COPY php.ini /etc/php7/php.ini
+COPY php.ini /usr/local/etc/php/php.ini
+RUN apk update 
+RUN apk add nano 
+RUN apk add libzip-dev zip libpng-dev freetype-dev libjpeg-turbo-dev
+RUN apk add --no-cache php7-pear php7-dev gcc musl-dev make
+ENV LIBRARY_PATH=/lib:/usr/lib
+RUN docker-php-ext-configure zip
+RUN docker-php-ext-install zip
+RUN docker-php-ext-configure pdo_mysql
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-configure gd
+RUN docker-php-ext-install gd
+RUN pecl install redis && docker-php-ext-enable redis
+USER root
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+#RUN mv composer.phar /usr/local/bin/composer
