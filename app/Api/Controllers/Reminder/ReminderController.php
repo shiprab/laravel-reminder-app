@@ -118,7 +118,7 @@ class ReminderController extends BaseController
      * @OA\Put(
      ** path="/api/reminder/update/{id}",
      *   tags={"Reminders"},
-     *   summary="Update Reminder",
+     *   summary="Api for Update Reminder and mark as complete or open",
      *   operationId="reminder",
      *
      *   @OA\Parameter(
@@ -206,9 +206,8 @@ class ReminderController extends BaseController
         if ($validator->fails()) {
             return "false"; //@TODO add proper error messages
         }
-        $response = $this->reminderService->updateReminder($id, $request->toArray());
-        return ['status' => 200, 'message' => trans('custom.success'), 'data' => $response];
-
+        $this->reminderService->updateReminder($id, $request->toArray());
+        return ['status' => 200, 'message' => trans('custom.success')];
     }
 
     /**
@@ -227,7 +226,7 @@ class ReminderController extends BaseController
      *           type="date"
      *      )
      *   ),
-     * 
+     *
      *   @OA\Parameter(
      *      name="status",
      *      in="query",
@@ -288,14 +287,14 @@ class ReminderController extends BaseController
         $response = $this->reminderService->getReminders($request->toArray());
         return ReminderResource::collection($response);
     }
-    
+
     /**
-     * @OA\Post(
+     * @OA\Delete(
      ** path="/api/reminder/delete",
      *   tags={"Reminders"},
      *   summary="Delete reminders",
      *   operationId="deletereminder",
-     *   
+     *
      *   @OA\Parameter(
      *      name="id",
      *      in="query",
@@ -304,7 +303,7 @@ class ReminderController extends BaseController
      *           type="int"
      *      )
      *   ),
-     * 
+     *
      *   @OA\Parameter(
      *      name="reminder_date",
      *      in="query",
@@ -314,7 +313,7 @@ class ReminderController extends BaseController
      *           type="date"
      *      )
      *   ),
-     * 
+     *
      *   @OA\Parameter(
      *      name="status",
      *      in="query",
@@ -357,13 +356,13 @@ class ReminderController extends BaseController
      **/
 
     /**
-     * Deletes the reminder 
+     * Deletes the reminder
      *
      * @param Request $request
      * @return ReminderResource
      */
     public function deleteReminders(Request $request)
-    {  
+    {
         $aRules = array(
             'id' => 'int',
             'reminder_date' => 'date|date_format:d-m-Y',
