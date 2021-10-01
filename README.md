@@ -26,7 +26,6 @@ These instructions will get you a copy of the project up and running on your loc
 - cp .env.example .env
 - php artisan key:generate
 - Make database entry in .env file
-- cd docker
 - docker-compose build (for building the project)
 - docker-compose up -d
 
