@@ -1,0 +1,31 @@
+version: "3.3"
+
+networks:
+  reminderapp:
+    driver: bridge
+
+services:
+  mysql:
+    image: mysql:5.7
+    platform: linux/x86_64
+    container_name: reminderapp-mysql
+    networks: #it will have two distinct DB servers on AWS (one for BeeLiked and another for general apps)
+      - reminderapp
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: remiberapp
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+
+  reminderapp:
+    build: 
+      context: .
+      dockerfile: local/Dockerfile
+    restart: unless-stopped
+    networks:
+      - reminderapp
+    ports:
+      - 8097:80
+    depends_on:
+      - mysql
