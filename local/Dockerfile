@@ -5,7 +5,7 @@ COPY . /var/app/laravel-reminder-app
 WORKDIR /var/app/laravel-reminder-app
 USER root
 RUN composer self-update
-RUN composer config -g github-oauth.github.com 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
+RUN composer config -g github-oauth.github.com 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
 RUN composer install --prefer-dist --ignore-platform-reqs -vvv
 RUN composer dump-autoload
 RUN chown -R www-data:www-data /var/app/laravel-reminder-app/storage/logs
